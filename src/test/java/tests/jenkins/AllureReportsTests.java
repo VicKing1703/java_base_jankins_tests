@@ -1,8 +1,10 @@
 package tests.jenkins;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,12 @@ import static org.openqa.selenium.By.linkText;
 @Tag("Allure")
 public class AllureReportsTests {
 
+    @BeforeAll
+    public static void beforeAll() {
+        Configuration.baseUrl = "https://github.com";
+        Configuration.remote = "https://user1:1234@selenoid.autotests.cloud/wd/hub";
+    }
+
     private static String REPOSITORY = "VicKing1703/qa_guru_40_demoqa_tests";
     private static String ISSUE = "First issues";
 
@@ -24,7 +32,7 @@ public class AllureReportsTests {
     public void issueSearchSelenideTest() {
         SelenideLogger.addListener("allure", new AllureSelenide());
 
-        open("https://github.com");
+        open("/");
 
         $(".input-button").click();
         $(".QueryBuilder-Input").sendKeys(REPOSITORY);
