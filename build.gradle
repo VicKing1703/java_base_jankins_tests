@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+    id 'io.qameta.allure' version '3.0.1'
+}
+
+repositories {
+    mavenCentral()
+}
+
+allure {
+    report {
+        version.set("2.29.0") //версия Allure Report (https://github.com/allure-framework/allure2)
+    }
+    adapter { // отвечает за появление папочки build/allure-results
+        aspectjWeaver.set(true) // обработка аннотации @Step
+        frameworks {
+            junit5 {
+                adapterVersion.set("2.29.0") //версия Allure JUnit5 (https://mvnrepository.com/artifact/io.qameta.allure/allure-junit5)
+            }
+        }
+    }
+}
+
+dependencies {
+    testImplementation (
+            'org.junit.jupiter:junit-jupiter:5.14.0',
+            platform('org.junit:junit-bom:5.14.0'),
+            'net.datafaker:datafaker:2.5.4',
+            'com.codeborne:selenide:7.14.0',
+            'com.codeborne:pdf-test:1.5.0',
+            'com.codeborne:xls-test:1.4.3',
+            'com.opencsv:opencsv:5.9',
+            'tools.jackson.core:jackson-core:3.1.0',
+            'tools.jackson.core:jackson-databind:3.1.0',
+            'io.qameta.allure:allure-selenide:2.29.0',
+            'io.qameta.allure:allure-junit5:2.29.0'
+    )
+    testRuntimeOnly (
+            'org.junit.platform:junit-platform-launcher'
+    )
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+
+    testLogging {
+        lifecycle {
+            events "started", "skipped", "failed", "standard_error", "standard_out"
+            exceptionFormat "short"
+        }
+    }
+}
